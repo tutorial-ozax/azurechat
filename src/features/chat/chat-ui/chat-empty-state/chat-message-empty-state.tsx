@@ -23,7 +23,7 @@ export const ChatMessageEmptyState: FC<Prop> = (props) => {
           {AI_NAME}にようこそ！
         </Typography>
           <p className="text-xs text-muted-foreground">
-            このChatGPT搭載のAIチャットボットは、2024年1月からプレビューで社内利用限定で公開されています。
+            このChatGPT搭載のAIチャットボットは、社内利用限定で公開されています。
             まだまだ未熟なAIですが、皆様のご協力により、AIの成長を目指しています。
             ご利用の際は、以下の項目を選択してください。
 
