@@ -29,9 +29,13 @@ export const ChatAPIWeb = async (props: PromptGPTProps) => {
   snippet += searchResult.webPages.value[3].snippet;
   snippet += searchResult.webPages.value[4].snippet; 
   snippet += searchResult.webPages.value[5].snippet; 
+  snippet += searchResult.webPages.value[6].snippet; 
+  snippet += searchResult.webPages.value[7].snippet; 
+  snippet += searchResult.webPages.value[8].snippet; 
+  snippet += searchResult.webPages.value[9].snippet; 
 
 
-  // ブラウザを起動
+/*   // ブラウザを起動
   const browser = await puppeteer.launch({ headless: true })
   // 新しくページを開く
   const page = await browser.newPage()
@@ -45,7 +49,7 @@ export const ChatAPIWeb = async (props: PromptGPTProps) => {
   //WebinnerText = '参照URL:'+ searchResult.webPages.value[0].url + '検索結果:'+ pageText.substring(0, 1000);
 　// ブラウザを閉じる
   await browser.close()
-
+ */
   BingResult = + searchResult.webPages.value[0].name + "\n" + searchResult.webPages.value[0].snippet + "\n";
   BingResult += + searchResult.webPages.value[1].name + "\n" + searchResult.webPages.value[1].snippet + "\n";
   BingResult += + searchResult.webPages.value[2].name + "\n" + searchResult.webPages.value[2].snippet + "\n";
@@ -57,7 +61,7 @@ export const ChatAPIWeb = async (props: PromptGPTProps) => {
   Prompt += "【問い合わせ】 "  + lastHumanMessage.content ;
   //Prompt += "【Web検索結果】" + snippet; 
   Prompt += "【Web検索結果】" + snippet; 
-  Prompt += "参照URLを回答最後に表示してください"; 
+  //Prompt += "参照URLを回答最後に表示してください"; 
 
   const chatHistory = new CosmosDBChatMessageHistory({
     sessionId: chatThread.id,
