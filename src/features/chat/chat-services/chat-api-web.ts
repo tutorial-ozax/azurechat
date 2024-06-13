@@ -56,7 +56,7 @@ export const ChatAPIWeb = async (props: PromptGPTProps) => {
   Prompt = "次の{問い合わせ}について、{Web検索結果}を元に2000文字程度で回答を生成してください。" ;
   Prompt += "【問い合わせ】 "  + lastHumanMessage.content ;
   //Prompt += "【Web検索結果】" + snippet; 
-  Prompt += "【Web検索結果】" + WebinnerText; 
+  Prompt += "【Web検索結果】" + snippet; 
   Prompt += "参照URLを回答最後に表示してください"; 
 
   const chatHistory = new CosmosDBChatMessageHistory({
