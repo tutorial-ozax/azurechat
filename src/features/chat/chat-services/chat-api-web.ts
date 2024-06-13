@@ -6,11 +6,14 @@ import { initAndGuardChatSession } from "./chat-thread-service";
 import { CosmosDBChatMessageHistory } from "./cosmosdb/cosmosdb";
 import { BingSearchResult } from "./Azure-bing-search/bing";
 import { PromptGPTProps } from "./models";
+import puppeteer from 'puppeteer'
+import { Lexend_Tera } from "next/font/google";
 
 export const ChatAPIWeb = async (props: PromptGPTProps) => {
   var snippet = "";
   var Prompt = "";
   var BingResult = "";
+  var WebinnerText = "";
   const { lastHumanMessage, chatThread } = await initAndGuardChatSession(props);
 
   const openAI = OpenAIInstance();
@@ -25,6 +28,23 @@ export const ChatAPIWeb = async (props: PromptGPTProps) => {
   snippet += searchResult.webPages.value[2].snippet;
   snippet += searchResult.webPages.value[3].snippet;
   snippet += searchResult.webPages.value[4].snippet; 
+  snippet += searchResult.webPages.value[5].snippet; 
+
+
+  // ブラウザを起動
+  const browser = await puppeteer.launch({ headless: true })
+  // 新しくページを開く
+  const page = await browser.newPage()
+  // 対象のページへ遷移
+  await page.goto(searchResult.webPages.value[0].url)
+  let pageText = await page.evaluate(() => document.body.innerText);
+  WebinnerText = '参照URL:'+ searchResult.webPages.value[0].url + '検索結果:'+ pageText.substring(0, 1000);
+  // 対象のページへ遷移
+  //await page.goto(searchResult.webPages.value[1].url)
+  //pageText += await page.evaluate(() => document.body.innerText);
+  //WebinnerText = '参照URL:'+ searchResult.webPages.value[0].url + '検索結果:'+ pageText.substring(0, 1000);
+　// ブラウザを閉じる
+  await browser.close()
 
   BingResult = + searchResult.webPages.value[0].name + "\n" + searchResult.webPages.value[0].snippet + "\n";
   BingResult += + searchResult.webPages.value[1].name + "\n" + searchResult.webPages.value[1].snippet + "\n";
@@ -32,9 +52,12 @@ export const ChatAPIWeb = async (props: PromptGPTProps) => {
   BingResult += + searchResult.webPages.value[3].name + "\n" + searchResult.webPages.value[3].snippet + "\n";
   BingResult += + searchResult.webPages.value[4].name + "\n" + searchResult.webPages.value[4].snippet + "\n";
 
-  Prompt = "次の{問い合わせ}について、{Web検索結果}を元に1000文字程度で回答を生成してください。" ;
+  //console.log(snippet) ;
+  Prompt = "次の{問い合わせ}について、{Web検索結果}を元に2000文字程度で回答を生成してください。" ;
   Prompt += "【問い合わせ】 "  + lastHumanMessage.content ;
-  Prompt += "【Web検索結果】" + snippet; 
+  //Prompt += "【Web検索結果】" + snippet; 
+  Prompt += "【Web検索結果】" + WebinnerText; 
+  Prompt += "参照URLを回答最後に表示してください"; 
 
   const chatHistory = new CosmosDBChatMessageHistory({
     sessionId: chatThread.id,
